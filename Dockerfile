@@ -4,6 +4,9 @@ FROM ubuntu:22.04
 # Set environment variables for ports (customizable)
 ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
+    VPS_MEMORY=2048 \
+    VPS_CORES=2 \
+    VPS_NAME=default-vps \
     IMAGE_URL=https://github.com/zenllc/VerseVM/releases/download/assets/win98-desktop.qcow2.gz
 
 RUN apt-get update && \
