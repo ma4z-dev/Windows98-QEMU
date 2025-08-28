@@ -1,7 +1,7 @@
 #!/bin/bash
 # Start QEMU with VNC
 qemu-system-x86_64 \
-    -hda /vm/winvista.qcow2 \
+    -hda /vm/win98.qcow2 \
     -m ${VPS_MEMORY} \
     -smp ${VPS_CORES} \
     -vnc 0.0.0.0:$((VNC_PORT-5900)) \
