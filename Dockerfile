@@ -4,40 +4,41 @@ FROM ubuntu:22.04
 # Set environment variables for ports (customizable)
 ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
-    VPS_MEMORY=2048 \
+    VPS_MEMORY=4096 \
     VPS_CORES=2 \
-    VPS_NAME=default-vps \
-    IMAGE_URL=https://github.com/zenllc/VerseVM/releases/download/assets/win98-desktop.qcow2.gz
+    VPS_NAME=ubuntu22-vps \
+    ISO_URL=https://releases.ubuntu.com/jammy/ubuntu-22.04.5-desktop-amd64.iso \
+    QCOW2_IMAGE=/vm/ubuntu22.qcow2
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         qemu-system-x86 \
+        qemu-utils \
         wget \
-        gzip \
         novnc \
         websockify \
         python3 \
         x11vnc \
-        xvfb && \
+        xvfb \
+        curl && \
     rm -rf /var/lib/apt/lists/*
 
 # Create directories
-RUN mkdir -p /vm /noVNC
+RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download and decompress Windows 98 image
-RUN wget -O win98.qcow2.gz $IMAGE_URL && \
-    gzip -d win98.qcow2.gz
+# Download Ubuntu 22.04 Desktop ISO
+RUN wget -O ubuntu22.iso "$ISO_URL"
 
-# Copy noVNC to container
-RUN ln -s /usr/share/novnc /noVNC
+# Create an empty qcow2 disk (30GB)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 30G
 
 # Expose ports
 EXPOSE $VNC_PORT
 EXPOSE $NOVNC_PORT
 
-# Start script
+# Copy start script
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
