@@ -4,11 +4,11 @@ FROM ubuntu:22.04
 # Set environment variables for ports (customizable)
 ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
-    VPS_MEMORY=4096 \
-    VPS_CORES=2 \
-    VPS_NAME=ubuntu22-vps \
-    ISO_URL=https://releases.ubuntu.com/jammy/ubuntu-22.04.5-desktop-amd64.iso \
-    QCOW2_IMAGE=/vm/ubuntu22.qcow2
+    VPS_MEMORY=1024 \
+    VPS_CORES=1 \
+    VPS_NAME=win2000-vps \
+    ISO_URL=https://archive.org/download/win-2000-pro/W2K2011.ISO \
+    QCOW2_IMAGE=/vm/win2000.qcow2
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -28,11 +28,11 @@ RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download Ubuntu 22.04 Desktop ISO
-RUN wget -O ubuntu22.iso "$ISO_URL"
+# Download Windows 2000 ISO
+RUN wget -O win2000.iso "$ISO_URL"
 
-# Create an empty qcow2 disk (30GB)
-RUN qemu-img create -f qcow2 $QCOW2_IMAGE 30G
+# Create an empty qcow2 disk (8GB is plenty for Win2000)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 8G
 
 # Expose ports
 EXPOSE $VNC_PORT
