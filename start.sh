@@ -6,14 +6,14 @@ echo "VPS_MEMORY  = ${VPS_MEMORY} MB"
 echo "VPS_CORES   = ${VPS_CORES}"
 echo "VNC_PORT    = ${VNC_PORT} (host mapped)"
 echo "NOVNC_PORT  = ${NOVNC_PORT}"
-echo "VM Disk     = /vm/win2000.qcow2"
-echo "ISO File    = /vm/win2000.iso"
+echo "VM Disk     = /vm/winvista.qcow2"
+echo "ISO File    = /vm/winvista.iso"
 echo "==============================="
 
 # Ensure the VM disk exists (create if missing)
-if [ ! -f /vm/win2000.qcow2 ]; then
-  echo "VM disk not found, creating new 8G disk..."
-  qemu-img create -f qcow2 /vm/win2000.qcow2 8G
+if [ ! -f /vm/winvista.qcow2 ]; then
+  echo "VM disk not found, creating new 25G disk..."
+  qemu-img create -f qcow2 /vm/winvista.qcow2 25G
 fi
 
 # Use a fixed QEMU display number
@@ -21,9 +21,9 @@ DISPLAY_NUM=0
 QEMU_VNC_PORT=$((5900 + DISPLAY_NUM))
 
 # If ISO exists, boot installer. Otherwise, boot from disk.
-if [ -f /vm/win2000.iso ]; then
-  echo "Booting from Windows 2000 ISO installer..."
-  BOOT_ARGS="-cdrom /vm/win2000.iso -boot d"
+if [ -f /vm/winvista.iso ]; then
+  echo "Booting from Windows Vista ISO installer..."
+  BOOT_ARGS="-cdrom /vm/winvista.iso -boot d"
 else
   echo "Booting directly from disk..."
   BOOT_ARGS="-boot c"
@@ -31,11 +31,11 @@ fi
 
 echo "Starting QEMU with display :${DISPLAY_NUM} (TCP ${QEMU_VNC_PORT})"
 qemu-system-x86_64 \
-    -drive file=/vm/win2000.qcow2,format=qcow2,if=ide \
+    -drive file=/vm/winvista.qcow2,format=qcow2,if=ide \
     -m ${VPS_MEMORY} \
     -smp ${VPS_CORES} \
     -vnc :${DISPLAY_NUM} \
-    -cpu pentium3 \
+    -cpu qemu64 \
     -machine pc \
     -net nic -net user \
     -device qemu-xhci \

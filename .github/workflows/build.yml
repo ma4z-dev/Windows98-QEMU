@@ -23,8 +23,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/ploxdwin:win2000 .
+          docker build -t ghcr.io/${{ github.repository_owner }}/ploxdwin:winvista .
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/ploxdwin:win2000
+          docker push ghcr.io/${{ github.repository_owner }}/ploxdwin:winvista

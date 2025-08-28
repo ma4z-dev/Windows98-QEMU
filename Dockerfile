@@ -4,11 +4,11 @@ FROM ubuntu:22.04
 # Set environment variables for ports (customizable)
 ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
-    VPS_MEMORY=1024 \
-    VPS_CORES=1 \
-    VPS_NAME=win2000-vps \
-    ISO_URL=https://archive.org/download/win-2000-pro/W2K2011.ISO \
-    QCOW2_IMAGE=/vm/win2000.qcow2
+    VPS_MEMORY=2048 \
+    VPS_CORES=2 \
+    VPS_NAME=winvista-vps \
+    ISO_URL=https://archive.org/download/windows-vista-sp0-sp1-sp2-msdn-iso-files-en-de-ru-tr-x86-x64/tr_windows_vista_x64_dvd_x12-61213.iso \
+    QCOW2_IMAGE=/vm/winvista.qcow2
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -28,11 +28,11 @@ RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download Windows 2000 ISO
-RUN wget -O win2000.iso "$ISO_URL"
+# Download Windows Vista ISO
+RUN wget -O winvista.iso "$ISO_URL"
 
-# Create an empty qcow2 disk (8GB is plenty for Win2000)
-RUN qemu-img create -f qcow2 $QCOW2_IMAGE 8G
+# Create an empty qcow2 disk (25GB for Vista)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 25G
 
 # Expose ports
 EXPOSE $VNC_PORT
