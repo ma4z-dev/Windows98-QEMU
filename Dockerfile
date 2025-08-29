@@ -1,15 +1,16 @@
 # Base image
 FROM ubuntu:22.04
 
-# Set environment variables for ports (customizable)
+# Environment variables
 ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
-    VPS_MEMORY=2048 \
-    VPS_CORES=2 \
-    VPS_NAME=winvista-vps \
-    ISO_URL=https://archive.org/download/windows-vista-sp0-sp1-sp2-msdn-iso-files-en-de-ru-tr-x86-x64/tr_windows_vista_x64_dvd_x12-61213.iso \
-    QCOW2_IMAGE=/vm/winvista.qcow2
+    VPS_MEMORY=1024 \
+    VPS_CORES=1 \
+    VPS_NAME=winxp-vps \
+    ISO_URL=https://archive.org/download/windows-xp-all-sp-msdn-iso-files-en-de-ru-tr-x86-x64/en_windows_xp_professional_with_service_pack_3_x86_cd_vl_x14-73974.iso \
+    QCOW2_IMAGE=/vm/winxp.qcow2
 
+# Install dependencies
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         qemu-system-x86 \
@@ -28,11 +29,11 @@ RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download Windows Vista ISO
-RUN wget -O winvista.iso "$ISO_URL"
+# Download Windows XP ISO
+RUN wget -O winxp.iso "$ISO_URL"
 
-# Create an empty qcow2 disk (25GB for Vista)
-RUN qemu-img create -f qcow2 $QCOW2_IMAGE 25G
+# Create an empty qcow2 disk (15GB for XP)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 15G
 
 # Expose ports
 EXPOSE $VNC_PORT

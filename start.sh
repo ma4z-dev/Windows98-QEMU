@@ -1,29 +1,28 @@
 #!/bin/bash
 
-# Print environment variables for debugging
 echo "==============================="
 echo "VPS_MEMORY  = ${VPS_MEMORY} MB"
 echo "VPS_CORES   = ${VPS_CORES}"
 echo "VNC_PORT    = ${VNC_PORT} (host mapped)"
 echo "NOVNC_PORT  = ${NOVNC_PORT}"
-echo "VM Disk     = /vm/winvista.qcow2"
-echo "ISO File    = /vm/winvista.iso"
+echo "VM Disk     = /vm/winxp.qcow2"
+echo "ISO File    = /vm/winxp.iso"
 echo "==============================="
 
-# Ensure the VM disk exists (create if missing)
-if [ ! -f /vm/winvista.qcow2 ]; then
-  echo "VM disk not found, creating new 25G disk..."
-  qemu-img create -f qcow2 /vm/winvista.qcow2 25G
+# Ensure VM disk exists
+if [ ! -f /vm/winxp.qcow2 ]; then
+  echo "VM disk not found, creating new 15G disk..."
+  qemu-img create -f qcow2 /vm/winxp.qcow2 15G
 fi
 
-# Use a fixed QEMU display number
+# Fixed display number
 DISPLAY_NUM=0
 QEMU_VNC_PORT=$((5900 + DISPLAY_NUM))
 
-# If ISO exists, boot installer. Otherwise, boot from disk.
-if [ -f /vm/winvista.iso ]; then
-  echo "Booting from Windows Vista ISO installer..."
-  BOOT_ARGS="-cdrom /vm/winvista.iso -boot d"
+# Boot arguments
+if [ -f /vm/winxp.iso ]; then
+  echo "Booting from Windows XP ISO installer..."
+  BOOT_ARGS="-cdrom /vm/winxp.iso -boot d"
 else
   echo "Booting directly from disk..."
   BOOT_ARGS="-boot c"
@@ -31,21 +30,20 @@ fi
 
 echo "Starting QEMU with display :${DISPLAY_NUM} (TCP ${QEMU_VNC_PORT})"
 qemu-system-x86_64 \
-    -drive file=/vm/winvista.qcow2,format=qcow2,if=ide \
+    -drive file=/vm/winxp.qcow2,format=qcow2,if=ide \
     -m ${VPS_MEMORY} \
     -smp ${VPS_CORES} \
     -vnc :${DISPLAY_NUM} \
-    -cpu qemu64 \
+    -cpu pentium3 \
     -machine pc \
     -net nic -net user \
-    -device qemu-xhci \
-    -device usb-tablet \
+    -vga std \
     ${BOOT_ARGS} &
 
 QEMU_PID=$!
 sleep 5
 
-# Check if QEMU started
+# Verify QEMU started
 if ps -p $QEMU_PID > /dev/null; then
     echo "QEMU started successfully (PID $QEMU_PID)."
 else
@@ -53,6 +51,6 @@ else
     exit 1
 fi
 
-# Start noVNC mapped to the host port
+# Start noVNC
 echo "Starting noVNC on port ${NOVNC_PORT} → QEMU TCP ${QEMU_VNC_PORT}"
 websockify --web=/usr/share/novnc/ $NOVNC_PORT localhost:$QEMU_VNC_PORT
