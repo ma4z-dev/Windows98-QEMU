@@ -5,14 +5,14 @@ echo "VPS_MEMORY  = ${VPS_MEMORY} MB"
 echo "VPS_CORES   = ${VPS_CORES}"
 echo "VNC_PORT    = ${VNC_PORT} (host mapped)"
 echo "NOVNC_PORT  = ${NOVNC_PORT}"
-echo "VM Disk     = /vm/winxp.qcow2"
-echo "ISO File    = /vm/winxp.iso"
+echo "VM Disk     = /vm/win7.qcow2"
+echo "ISO File    = /vm/win7.iso"
 echo "==============================="
 
 # Ensure VM disk exists
-if [ ! -f /vm/winxp.qcow2 ]; then
-  echo "VM disk not found, creating new 15G disk..."
-  qemu-img create -f qcow2 /vm/winxp.qcow2 15G
+if [ ! -f /vm/win7.qcow2 ]; then
+  echo "VM disk not found, creating new 25G disk..."
+  qemu-img create -f qcow2 /vm/win7.qcow2 25G
 fi
 
 # Fixed display number
@@ -20,9 +20,9 @@ DISPLAY_NUM=0
 QEMU_VNC_PORT=$((5900 + DISPLAY_NUM))
 
 # Boot arguments
-if [ -f /vm/winxp.iso ]; then
-  echo "Booting from Windows XP ISO installer..."
-  BOOT_ARGS="-cdrom /vm/winxp.iso -boot d"
+if [ -f /vm/win7.iso ]; then
+  echo "Booting from Windows 7 ISO installer..."
+  BOOT_ARGS="-cdrom /vm/win7.iso -boot d"
 else
   echo "Booting directly from disk..."
   BOOT_ARGS="-boot c"
@@ -30,7 +30,7 @@ fi
 
 echo "Starting QEMU with display :${DISPLAY_NUM} (TCP ${QEMU_VNC_PORT})"
 qemu-system-x86_64 \
-    -drive file=/vm/winxp.qcow2,format=qcow2,if=ide \
+    -drive file=/vm/win7.qcow2,format=qcow2,if=ide \
     -m ${VPS_MEMORY} \
     -smp ${VPS_CORES} \
     -vnc :${DISPLAY_NUM} \
