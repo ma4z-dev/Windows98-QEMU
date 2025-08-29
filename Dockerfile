@@ -6,9 +6,9 @@ ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
     VPS_MEMORY=2048 \
     VPS_CORES=2 \
-    VPS_NAME=win7-vps \
-    ISO_URL=https://archive.org/download/windows-7-monilne-lite/Windows%207%20monilne%20lite.iso \
-    QCOW2_IMAGE=/vm/win7.qcow2
+    VPS_NAME=win81-vps \
+    ISO_URL=https://archive.org/download/win-8.1-english-x-64-x-86/Win8.1_English_x32.iso \
+    QCOW2_IMAGE=/vm/win81.qcow2
 
 # Install dependencies
 RUN apt-get update && \
@@ -29,11 +29,11 @@ RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download Windows 7 ISO
-RUN wget -O win7.iso "$ISO_URL"
+# Download Windows 8.1 ISO
+RUN wget -O win81.iso "$ISO_URL"
 
-# Create an empty qcow2 disk (25GB for Win7)
-RUN qemu-img create -f qcow2 $QCOW2_IMAGE 25G
+# Create an empty qcow2 disk (30GB for Win8.1)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 30G
 
 # Expose ports
 EXPOSE $VNC_PORT
