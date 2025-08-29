@@ -6,9 +6,9 @@ ENV VNC_PORT=5900 \
     NOVNC_PORT=6080 \
     VPS_MEMORY=2048 \
     VPS_CORES=2 \
-    VPS_NAME=tiny10-vps \
-    ISO_URL=https://archive.org/download/tiny-10-b-2/Tiny10%20B2.iso \
-    QCOW2_IMAGE=/vm/tiny10.qcow2
+    VPS_NAME=tiny11-vps \
+    ISO_URL=https://archive.org/download/tiny-11-NTDEV/tiny11%20b1.iso \
+    QCOW2_IMAGE=/vm/tiny11.qcow2
 
 # Install dependencies
 RUN apt-get update && \
@@ -29,11 +29,11 @@ RUN mkdir -p /vm
 
 WORKDIR /vm
 
-# Download Tiny10 B2 ISO
-RUN wget -O tiny10.iso "$ISO_URL"
+# Download Tiny11 B1 ISO
+RUN wget -O tiny11.iso "$ISO_URL"
 
-# Create an empty qcow2 disk (15GB for Tiny10)
-RUN qemu-img create -f qcow2 $QCOW2_IMAGE 15G
+# Create an empty qcow2 disk (40GB for Tiny11)
+RUN qemu-img create -f qcow2 $QCOW2_IMAGE 40G
 
 # Expose ports
 EXPOSE $VNC_PORT

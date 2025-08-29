@@ -5,14 +5,14 @@ echo "VPS_MEMORY  = ${VPS_MEMORY} MB"
 echo "VPS_CORES   = ${VPS_CORES}"
 echo "VNC_PORT    = ${VNC_PORT} (host mapped)"
 echo "NOVNC_PORT  = ${NOVNC_PORT}"
-echo "VM Disk     = /vm/tiny10.qcow2"
-echo "ISO File    = /vm/tiny10.iso"
+echo "VM Disk     = /vm/tiny11.qcow2"
+echo "ISO File    = /vm/tiny11.iso"
 echo "==============================="
 
 # Ensure VM disk exists
-if [ ! -f /vm/tiny10.qcow2 ]; then
+if [ ! -f /vm/tiny11.qcow2 ]; then
   echo "VM disk not found, creating new 15G disk..."
-  qemu-img create -f qcow2 /vm/tiny10.qcow2 15G
+  qemu-img create -f qcow2 /vm/tiny11.qcow2 15G
 fi
 
 # Fixed display number
@@ -20,9 +20,9 @@ DISPLAY_NUM=0
 QEMU_VNC_PORT=$((5900 + DISPLAY_NUM))
 
 # Boot arguments
-if [ -f /vm/tiny10.iso ]; then
-  echo "Booting from Tiny10 B2 ISO installer..."
-  BOOT_ARGS="-cdrom /vm/tiny10.iso -boot d"
+if [ -f /vm/tiny11.iso ]; then
+  echo "Booting from Tiny11 B1 ISO installer..."
+  BOOT_ARGS="-cdrom /vm/tiny11.iso -boot d"
 else
   echo "Booting directly from disk..."
   BOOT_ARGS="-boot c"
@@ -30,14 +30,12 @@ fi
 
 echo "Starting QEMU with display :${DISPLAY_NUM} (TCP ${QEMU_VNC_PORT})"
 qemu-system-x86_64 \
-    -drive file=/vm/tiny10.qcow2,format=qcow2,if=ide \
+    -drive file=/vm/tiny11.qcow2,format=qcow2,if=ide \
     -m ${VPS_MEMORY} \
     -smp ${VPS_CORES} \
     -vnc :${DISPLAY_NUM} \
     -cpu pentium3 \
     -machine pc \
-    -device usb-ehci,id=ehci \
-    -device usb-tablet,bus=ehci.0 \
     -net nic -net user \
     -vga std \
     ${BOOT_ARGS} &
